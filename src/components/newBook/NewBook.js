@@ -1,10 +1,13 @@
 import BookForm from "../bookForm/BookForm";
 import "./NewBook.css";
 
-const NewBook = () => {
+const NewBook = ({ onBookSaved }) => {
+  const saveBookHandler = (book) => {
+    onBookSaved(book);
+  };
   return (
     <div className="new-book">
-      <BookForm />
+      <BookForm onSaveBook={saveBookHandler} />
     </div>
   );
 };

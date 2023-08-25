@@ -31,12 +31,17 @@ const App = () => {
     },
   ];
 
+  const appBookHandler = (book) => {
+    console.log(book);
+    console.log("In App!");
+  };
+
   return (
     <div className="App">
       <h1>Books Champion App</h1>
       <br />
-      <NewBook />
-      <Books books={books}>Acá los libros</Books>
+      <NewBook onBookSaved={appBookHandler} />
+      <Books books={books} />
     </div>
   );
 };
