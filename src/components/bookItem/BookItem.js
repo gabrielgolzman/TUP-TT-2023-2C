@@ -1,6 +1,9 @@
+import { useState } from "react";
+
 import "./BookItem.css";
 
 import DateRead from "../dateRead/DateRead";
+import BookCard from "../bookCard/BookCard";
 
 // const props = {}
 
@@ -9,18 +12,21 @@ import DateRead from "../dateRead/DateRead";
 // }
 
 const BookItem = ({ title, author, pageCount, dateRead }) => {
-  //   const bookTitle = "100 años de soledad";
-  //   const bookAuthor = "Gabriel García Marquez";
-  //   const pageCount = 410;
-  //   const bookDate = new Date(2023, 7, 18);
+  const [titleValue, setTitleValue] = useState(title);
+  const clickHandler = () => {
+    console.log("Clicked!");
+    setTitleValue("Actualizado!");
+    console.log(titleValue);
+  };
 
   return (
-    <div className="book-item-container">
-      <h1>{title}</h1>
+    <BookCard className="book-item-container">
+      <h1>{titleValue}</h1>
       <h3>{author}</h3>
       <DateRead dateRead={dateRead} />
       <p>{pageCount} páginas</p>
-    </div>
+      <button onClick={clickHandler}>Cambiar titulo</button>
+    </BookCard>
   );
 };
 
