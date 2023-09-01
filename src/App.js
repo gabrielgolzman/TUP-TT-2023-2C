@@ -1,4 +1,5 @@
 import "./App.css";
+import BooksFilter from "./components/bookFilter/BookFilter";
 
 import Books from "./components/books/Books";
 import NewBook from "./components/newBook/NewBook";
@@ -41,6 +42,7 @@ const App = () => {
       <h1>Books Champion App</h1>
       <br />
       <NewBook onBookSaved={appBookHandler} />
+      <BooksFilter />
       <Books books={books} />
     </div>
   );
