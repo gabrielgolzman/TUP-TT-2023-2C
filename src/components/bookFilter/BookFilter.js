@@ -1,11 +1,14 @@
 import "./BookFilter.css";
 
-const BooksFilter = () => {
+const BooksFilter = ({ onYearChange, yearSelected }) => {
+  const changeYearHandler = (event) => {
+    onYearChange(event.target.value);
+  };
   return (
     <>
       <div className="Books-filter">
         <div className="Books-filter__control">
-          <select>
+          <select onChange={changeYearHandler} value={yearSelected}>
             <option value="">Seleccione un año</option>
             <option value="2023">2023</option>
             <option value="2022">2022</option>

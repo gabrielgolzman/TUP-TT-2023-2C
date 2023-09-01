@@ -28,7 +28,7 @@ const BookForm = ({ onSaveBook }) => {
       title,
       author,
       pageCount,
-      dateRead,
+      dateRead: new Date(dateRead),
     };
 
     onSaveBook(newBook);
