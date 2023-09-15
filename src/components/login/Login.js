@@ -1,12 +1,15 @@
 import { useRef, useState } from "react";
 import "./Login.css";
+import { useNavigate } from "react-router";
 
-const Login = () => {
+const Login = ({ onLoggedIn }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+
+  const navigate = useNavigate();
 
   const emailChangeHandler = (event) => {
     if (emailRef.current.value.length > 0) {
@@ -35,7 +38,8 @@ const Login = () => {
       alert("Password vacío");
       return;
     }
-    alert(`Su email es: ${email} y su password es: ${password}`);
+    onLoggedIn();
+    navigate("/home");
   };
 
   return (
