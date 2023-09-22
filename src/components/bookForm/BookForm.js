@@ -1,13 +1,28 @@
 import { Button } from "react-bootstrap";
 
 import "./BookForm.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const BookForm = ({ onSaveBook }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [pageCount, setPageCount] = useState("");
   const [dateRead, setDateRead] = useState("");
+  const [formValid, setFormValid] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      console.log("Check form");
+      const isValid =
+        title !== "" && author !== "" && pageCount !== "" && dateRead !== "";
+      setFormValid(isValid);
+    }, 500);
+
+    return () => {
+      console.log("Cleanup");
+      clearTimeout(timer);
+    };
+  }, [title, author, pageCount, dateRead]);
 
   const changeTitleHandler = (event) => {
     setTitle(event.target.value);
@@ -23,11 +38,12 @@ const BookForm = ({ onSaveBook }) => {
   const changeDateReadHandler = (event) => {
     setDateRead(event.target.value);
   };
+
   const addBookHandler = () => {
     const newBook = {
       title,
       author,
-      pageCount,
+      pageCount: parseInt(pageCount, 10),
       dateRead: new Date(dateRead),
     };
 
@@ -83,8 +99,10 @@ const BookForm = ({ onSaveBook }) => {
         </div>
       </div>
       <div className="new-book-actions">
-        <button>Cancelar</button>
-        <Button onClick={addBookHandler}>Agregar lectura</Button>
+        <Button>Cancelar</Button>
+        <Button disabled={!formValid} onClick={addBookHandler}>
+          Agregar lectura
+        </Button>
       </div>
     </form>
   );

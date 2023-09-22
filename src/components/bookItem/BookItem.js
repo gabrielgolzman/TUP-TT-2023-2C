@@ -23,7 +23,7 @@ const BookItem = ({ title, author, pageCount, dateRead }) => {
     <BookCard className="book-item-container">
       <h1>{titleValue}</h1>
       <h3>{author}</h3>
-      <DateRead dateRead={dateRead} />
+      {/* <DateRead dateRead={dateRead} /> */}
       <p>{pageCount} páginas</p>
       <button onClick={clickHandler}>Cambiar titulo</button>
     </BookCard>

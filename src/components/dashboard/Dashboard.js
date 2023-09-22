@@ -1,7 +1,7 @@
 import NewBook from "../newBook/NewBook";
 import BooksFilter from "../bookFilter/BookFilter";
 import Books from "../books/Books";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router";
 
@@ -35,13 +35,55 @@ const BOOKS = [
 const Dashboard = ({ onLogout }) => {
   const [yearSelected, setYearSelected] = useState("");
   const [books, setBooks] = useState(BOOKS);
-  const [booksFiltered, setBooksFiltered] = useState(BOOKS);
+  const [booksFiltered, setBooksFiltered] = useState([]);
 
+  useEffect(() => {
+    fetch("http://localhost:8000/books", {
+      headers: {
+        accept: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((bookData) => {
+        setBooks(bookData);
+        setBooksFiltered(bookData);
+      })
+      .catch((error) => console.log(error));
+  }, []);
   const navigate = useNavigate();
 
   const appBookHandler = (book) => {
     setBooks((prevBooks) => [book, ...prevBooks]);
     setBooksFiltered((prevBooks) => [book, ...prevBooks]);
+
+    const dateString = book.dateRead.toISOString().slice(0, 10);
+    const newBookId = books[books.length - 1].id + 1;
+
+    fetch("http://localhost:8000/books", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        id: newBookId,
+        title: book.title,
+        author: book.author,
+        dateRead: dateString,
+        pageCount: parseInt(book.pageCount, 10),
+      }),
+    })
+      .then((response) => {
+        if (response.ok) return response.json();
+        else {
+          throw new Error("The response had some errors");
+        }
+      })
+      .then(() => {
+        const newBookArray = [{ ...book, id: newBookId }, ...books];
+        setBooks(newBookArray);
+        setBooksFiltered(newBookArray);
+      })
+      .catch((error) => console.log(error));
   };
 
   const appYearHandler = (year) => {

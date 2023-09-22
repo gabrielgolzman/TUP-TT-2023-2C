@@ -5,7 +5,7 @@ import BookItem from "../bookItem/BookItem";
 const Books = ({ books, yearSelected }) => {
   const booksMapped = books.map((book, index) => (
     <BookItem
-      key={book.title + index}
+      key={book.id}
       title={book.title}
       author={book.author}
       dateRead={book.dateRead}
