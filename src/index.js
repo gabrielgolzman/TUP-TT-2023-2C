@@ -3,7 +3,12 @@ import ReactDOM from "react-dom/client";
 
 import "./index.css";
 
+import { AuthenticationContextProvider } from "./services/authenticationContext/authentication.context";
 import App from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<App />);
+root.render(
+  <AuthenticationContextProvider>
+    <App />
+  </AuthenticationContextProvider>
+);

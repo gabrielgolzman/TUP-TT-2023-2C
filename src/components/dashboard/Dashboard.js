@@ -1,9 +1,10 @@
 import NewBook from "../newBook/NewBook";
 import BooksFilter from "../bookFilter/BookFilter";
 import Books from "../books/Books";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router";
+import { AuthenticationContext } from "../../services/authenticationContext/authentication.context";
 
 const BOOKS = [
   {
@@ -32,10 +33,14 @@ const BOOKS = [
   },
 ];
 
-const Dashboard = ({ onLogout }) => {
+const Dashboard = () => {
   const [yearSelected, setYearSelected] = useState("");
   const [books, setBooks] = useState(BOOKS);
   const [booksFiltered, setBooksFiltered] = useState([]);
+
+  const { handleLogout, user } = useContext(AuthenticationContext);
+
+  const username = user.email.split("@")[0];
 
   useEffect(() => {
     fetch("http://localhost:8000/books", {
@@ -94,8 +99,8 @@ const Dashboard = ({ onLogout }) => {
     setBooksFiltered(booksFiltered);
   };
 
-  const handleLogout = () => {
-    onLogout();
+  const handleLogoutInDashboard = () => {
+    handleLogout();
     navigate("/login");
   };
 
@@ -105,8 +110,11 @@ const Dashboard = ({ onLogout }) => {
         <Col>
           <h1>Books Champion App</h1>
         </Col>
+        <Col className="d-flex justify-content-center align-items-center">
+          <h4>Hola {username}!</h4>
+        </Col>
         <Col className="d-flex justify-content-end mx-4 py-2">
-          <Button onClick={handleLogout}>Cerrar sesión</Button>
+          <Button onClick={handleLogoutInDashboard}>Cerrar sesión</Button>
         </Col>
       </Row>
       <br />

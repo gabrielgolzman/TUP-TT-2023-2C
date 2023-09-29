@@ -1,10 +1,13 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router";
+import { AuthenticationContext } from "../../services/authenticationContext/authentication.context";
 
-const Login = ({ onLoggedIn }) => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const { handleLogin } = useContext(AuthenticationContext);
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -38,7 +41,7 @@ const Login = ({ onLoggedIn }) => {
       alert("Password vacío");
       return;
     }
-    onLoggedIn();
+    handleLogin(email);
     navigate("/home");
   };
 

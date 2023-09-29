@@ -8,20 +8,9 @@ import "./App.css";
 import Login from "./components/login/Login";
 import Dashboard from "./components/dashboard/Dashboard";
 import Protected from "./components/security/protected/Protected";
-import { useState } from "react";
 import PageNotFound from "./components/security/pageNotFound/PageNotFound";
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const loginHandler = () => {
-    setIsLoggedIn(true);
-  };
-
-  const logoutHandler = () => {
-    setIsLoggedIn(false);
-  };
-
   const router = createBrowserRouter([
     {
       path: "/",
@@ -29,13 +18,13 @@ const App = () => {
     },
     {
       path: "/login",
-      element: <Login onLoggedIn={loginHandler} />,
+      element: <Login />,
     },
     {
       path: "/home",
       element: (
-        <Protected isSignedIn={isLoggedIn}>
-          <Dashboard onLogout={logoutHandler} />
+        <Protected>
+          <Dashboard />
         </Protected>
       ),
     },
