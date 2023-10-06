@@ -1,7 +1,11 @@
-import BookForm from "../bookForm/BookForm";
+import { memo } from "react";
+
 import "./NewBook.css";
 
-const NewBook = ({ onBookSaved }) => {
+import BookForm from "../bookForm/BookForm";
+
+const NewBook = memo(({ onBookSaved }) => {
+  console.log("In New Book!");
   const saveBookHandler = (book) => {
     onBookSaved(book);
   };
@@ -10,6 +14,6 @@ const NewBook = ({ onBookSaved }) => {
       <BookForm onSaveBook={saveBookHandler} />
     </div>
   );
-};
+});
 
 export default NewBook;

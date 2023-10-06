@@ -1,8 +1,11 @@
+import { memo } from "react";
+
 import "./Books.css";
 
 import BookItem from "../bookItem/BookItem";
 
-const Books = ({ books, yearSelected }) => {
+const Books = memo(({ books, yearSelected }) => {
+  console.log("In Books");
   const booksMapped = books.map((book, index) => (
     <BookItem
       key={book.id}
@@ -22,6 +25,6 @@ const Books = ({ books, yearSelected }) => {
       )}
     </div>
   );
-};
+});
 
 export default Books;

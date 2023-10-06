@@ -1,10 +1,12 @@
 import NewBook from "../newBook/NewBook";
 import BooksFilter from "../bookFilter/BookFilter";
 import Books from "../books/Books";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import { AuthenticationContext } from "../../services/authenticationContext/authentication.context";
+import { APIContext } from "../../services/apiContext/API.Context";
+import ToggleTheme from "../ui/toggleTheme/ToggleTheme";
 
 const BOOKS = [
   {
@@ -39,10 +41,12 @@ const Dashboard = () => {
   const [booksFiltered, setBooksFiltered] = useState([]);
 
   const { handleLogout, user } = useContext(AuthenticationContext);
+  const { toggleLoading } = useContext(APIContext);
 
   const username = user.email.split("@")[0];
 
   useEffect(() => {
+    toggleLoading(true);
     fetch("http://localhost:8000/books", {
       headers: {
         accept: "application/json",
@@ -50,46 +54,53 @@ const Dashboard = () => {
     })
       .then((response) => response.json())
       .then((bookData) => {
+        toggleLoading(false);
         setBooks(bookData);
         setBooksFiltered(bookData);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        toggleLoading(false);
+        console.log(error);
+      });
   }, []);
   const navigate = useNavigate();
 
-  const appBookHandler = (book) => {
-    setBooks((prevBooks) => [book, ...prevBooks]);
-    setBooksFiltered((prevBooks) => [book, ...prevBooks]);
+  const appBookHandler = useCallback(
+    (book) => {
+      setBooks((prevBooks) => [book, ...prevBooks]);
+      setBooksFiltered((prevBooks) => [book, ...prevBooks]);
 
-    const dateString = book.dateRead.toISOString().slice(0, 10);
-    const newBookId = books[books.length - 1].id + 1;
+      const dateString = book.dateRead.toISOString().slice(0, 10);
+      const newBookId = books[books.length - 1].id + 1;
 
-    fetch("http://localhost:8000/books", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        id: newBookId,
-        title: book.title,
-        author: book.author,
-        dateRead: dateString,
-        pageCount: parseInt(book.pageCount, 10),
-      }),
-    })
-      .then((response) => {
-        if (response.ok) return response.json();
-        else {
-          throw new Error("The response had some errors");
-        }
+      fetch("http://localhost:8000/books", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          id: newBookId,
+          title: book.title,
+          author: book.author,
+          dateRead: dateString,
+          pageCount: parseInt(book.pageCount, 10),
+        }),
       })
-      .then(() => {
-        const newBookArray = [{ ...book, id: newBookId }, ...books];
-        setBooks(newBookArray);
-        setBooksFiltered(newBookArray);
-      })
-      .catch((error) => console.log(error));
-  };
+        .then((response) => {
+          if (response.ok) return response.json();
+          else {
+            throw new Error("The response had some errors");
+          }
+        })
+        .then(() => {
+          const newBookArray = [{ ...book, id: newBookId }, ...books];
+          setBooks(newBookArray);
+          setBooksFiltered(newBookArray);
+        })
+        .catch((error) => console.log(error));
+    },
+    [books]
+  );
 
   const appYearHandler = (year) => {
     setYearSelected(year);
@@ -112,6 +123,9 @@ const Dashboard = () => {
         </Col>
         <Col className="d-flex justify-content-center align-items-center">
           <h4>Hola {username}!</h4>
+        </Col>
+        <Col>
+          <ToggleTheme />
         </Col>
         <Col className="d-flex justify-content-end mx-4 py-2">
           <Button onClick={handleLogoutInDashboard}>Cerrar sesión</Button>
