@@ -1,9 +1,13 @@
 import { useContext, useRef, useState } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router";
+
 import { AuthenticationContext } from "../../services/authenticationContext/authentication.context";
 import ToggleTheme from "../ui/toggleTheme/ToggleTheme";
 import { ThemeContext } from "../../services/themeContext/theme.context";
+import ComboLanguage from "../ui/comboLanguage/ComboLanguage";
+import { TranslateContext } from "../../services/translationContext/translation.context";
+import useTranslation from "../../custom/useTranslation/useTranslation";
 
 const Login = () => {
   const { theme } = useContext(ThemeContext);
@@ -16,6 +20,7 @@ const Login = () => {
   const passwordRef = useRef(null);
 
   const navigate = useNavigate();
+  const translate = useTranslation();
 
   const emailChangeHandler = (event) => {
     if (emailRef.current.value.length > 0) {
@@ -51,7 +56,8 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className={`login-box ${theme === "DARK" && "login-box-dark"}`}>
-        <h4>¡Bienvenidos a Book Champions!</h4>
+        <ComboLanguage />
+        <h4>{translate("welcome")}</h4>
         <div className="input-container">
           <input
             className="input-control"
@@ -65,7 +71,7 @@ const Login = () => {
         <div className="input-container">
           <input
             className="input-control"
-            placeholder="Contraseña"
+            placeholder={translate("password")}
             type="password"
             onChange={passwordChangeHandler}
             value={password}
@@ -73,7 +79,7 @@ const Login = () => {
           />
         </div>
         <button onClick={signInHandler} className="signin-button" type="button">
-          Iniciar sesión
+          {translate("login")}
         </button>
         <ToggleTheme />
       </div>
